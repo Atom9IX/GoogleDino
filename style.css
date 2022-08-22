@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  background: #fafafa;
+}
+
+.scene {
+  margin-left: 400px;
+  margin-top: 100px;
+  width: 700px;
+  height: 300px;
+  border: 2px solid #7b7b7b;
+  overflow: hidden;
+}
+
+.scene hr {
+  margin-top: 110px;
+}
+
+.dino {
+  position: relative;
+  top: 150px;
+  left: 100px;/*100*/
+  background-image: url(images/dino.png);
+  width: 50px;
+  height: 50px;
+  background-size: 50px 50px;
+}
+
+.obstance {
+  animation: moveObstance 4s infinite linear;
+  position: relative;
+  left: 680px;
+  top: 110px;
+  background-image: url(images/cactus.png);
+  width: 20px;
+  height: 40px;
+  background-size: 20px 40px;
+}
+
+@keyframes moveObstance {
+  0% {
+    left: 700px;
+  }
+
+  100% {
+    left: -30px;
+  }
+}
+
+.dino-jump {
+  animation: jump 500ms linear;
+}
+
+@keyframes jump {
+  0% {
+    top: 150px;
+  }
+
+  33% {
+    top: 75px;
+  }
+
+  50% {
+    top: 50px;
+  }
+
+  33% {
+    top: 75px;
+  }
+
+  100% {
+    top: 150px;
+  }
+}
