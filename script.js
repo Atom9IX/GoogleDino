@@ -7,7 +7,7 @@ const totalScoreNode = document.querySelector(".total-score")
 
 // * Game values
 let obstancePosition = 700;
-let obstanceSpeed = 3;
+let obstanceSpeed = 1;
 let userScore = 0;
 let totalScore = 0;
 
@@ -34,7 +34,7 @@ function setUserScore(score) {
 }
 
 function restart() {
-  setObstanceSpeed(3);
+  setObstanceSpeed(1);
   setObstancePosition(700);
   setUserScore(0);
 }
@@ -80,9 +80,9 @@ let isCollide = setInterval(function () {
     alert("GAME OVER");
     restart();
   }
-}, 1);
+}, 10);
 
-let obstanceMove = setInterval(render, 10);
+let obstanceMove = setInterval(render, 1);
 
 let ostancePositionIncrement = setInterval(incrementSpeed, 500);
 
