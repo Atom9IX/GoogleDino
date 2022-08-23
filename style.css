@@ -19,11 +19,11 @@ body {
 .dino {
   position: relative;
   top: 150px;
-  left: 100px; /*100*/
-  background-image: url(images/dino.png);
+  left: 100px;
   width: 50px;
   height: 50px;
   background-size: 50px 50px;
+  animation: dinoRun 0.2s infinite ease;
 }
 
 .obstance {
@@ -36,54 +36,9 @@ body {
   background-size: 20px 40px;
 }
 
-/* @keyframes moveObstance {
-  0% {
-    left: 700px;
-  }
-
-  10% {
-    left: 650px;
-  }
-
-  20% {
-    left: 600px;
-  }
-
-  30% {
-    left: 550px;
-  }
-
-  40% {
-    left: 500px;
-  }
-
-  50% {
-    left: 450px;
-  }
-
-  60% {
-    left: 400px;
-  }
-
-  70% {
-    left: 350px;
-  }
-
-  80% {
-    left: 300px;
-  }
-
-  90% {
-    left: 250px;
-  }
-
-  100% {
-    left: -30px;
-  }
-} */
-
 .dino-jump {
   animation: jump 500ms linear;
+  background-image: url(images/dino.png);
 }
 
 @keyframes jump {
@@ -106,4 +61,25 @@ body {
   100% {
     top: 150px;
   }
+}
+
+@keyframes dinoRun {
+  0% {
+    background-image: url(images/dinoRun1.png);
+  }
+
+  50% {
+    background-image: url(images/dinoRun2.png);
+  }
+
+  100% {
+    background-image: url(images/dinoRun1.png);
+  }
+}
+
+.score {
+  display: flex;
+  justify-content: space-between;
+  color: #494949;
+  font-size: 25px;
 }

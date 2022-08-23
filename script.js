@@ -2,10 +2,14 @@
 const scene = document.querySelector(".scene");
 const dino = document.querySelector(".dino");
 const obstance = document.querySelector(".obstance");
+const userScoreNode = document.querySelector(".user-score");
+const totalScoreNode = document.querySelector(".total-score")
 
 // * Game values
 let obstancePosition = 700;
-let obstanceSpeed = 1;
+let obstanceSpeed = 3;
+let userScore = 0;
+let totalScore = 0;
 
 // * Functions
 function dinoJump() {
@@ -25,14 +29,23 @@ function setObstancePosition(centerx) {
   obstancePosition = centerx;
 }
 
+function setUserScore(score) {
+  userScore = score;
+}
+
 function restart() {
-  setObstanceSpeed(1);
+  setObstanceSpeed(3);
   setObstancePosition(700);
+  setUserScore(0);
+}
+
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
 }
 
 function render() {
   if (obstancePosition < -20) {
-    setObstancePosition(700);
+    setObstancePosition(getRandomArbitrary(700, 1500))
   }
   obstance.setAttribute("style", `left: ${obstancePosition}px`);
   obstancePosition -= obstanceSpeed;
@@ -40,6 +53,15 @@ function render() {
 
 function incrementSpeed() {
   obstanceSpeed += 0.015;
+}
+
+function renderUserScore() {
+  userScoreNode.textContent = userScore;
+  totalScoreNode.textContent = totalScore;
+  userScore++;
+  if (userScore > totalScore) {
+    totalScore = userScore;
+  }
 }
 
 window.addEventListener("keydown", (event) => {
@@ -60,6 +82,8 @@ let isCollide = setInterval(function () {
   }
 }, 1);
 
-let obstanceMove = setInterval(render, 0.5);
+let obstanceMove = setInterval(render, 10);
 
 let ostancePositionIncrement = setInterval(incrementSpeed, 500);
+
+let scoreStart = setInterval(renderUserScore, 100);
