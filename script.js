@@ -7,9 +7,13 @@ const totalScoreNode = document.querySelector(".total-score");
 
 let running = true;
 
+// * images
+const deth = "images/death.png";
+
 // * classes
 class Obstance {
   static speed = 1;
+  static maxspeed = 3.5;
 
   constructor(options) {
     this.img = options.img;
@@ -27,13 +31,14 @@ class Obstance {
 
 class Dino {
   constructor(options) {
-    this.img = options.img;
+    this.bgimg = options.bgimg;
   }
 
   jump() {
     if (running) {
       if (!dinoNode.classList.contains("dino-jump")) {
         dinoNode.classList.add("dino-jump");
+        dinoNode.classList.remove("kill");
       }
       setTimeout(function () {
         dinoNode.classList.remove("dino-jump");
@@ -41,7 +46,16 @@ class Dino {
     }
   }
 
-  kill() {}
+  end() {
+    dinoNode.classList.remove("dino-jump");
+    dinoNode.classList.remove("run");
+    dinoNode.classList.add("kill");
+  }
+
+  run() {
+    dinoNode.classList.remove("death");
+    dinoNode.classList.add("run");
+  }
 }
 
 class Score {
@@ -65,25 +79,26 @@ class Score {
 }
 
 let dino = new Dino({
-  img: "dino day/night img",
+  bgimg: "dino day/night/death img",
 });
 
 let smallCactus = new Obstance({
   img: "small cactus img...",
-  position: 700,
+  position: -100,
 });
 
 let bigCactus = new Obstance({
   img: "big cactus img...",
-  position: 700,
+  position: -100,
 });
 
 // * Functions
 function restart() {
   Obstance.setObstanceSpeed(1);
-  smallCactus.setPosition(700);
-  bigCactus.setPosition(700);
+  smallCactus.setPosition(-100);
+  bigCactus.setPosition(-100);
   Score.setUserScore(0);
+  dino.run();
   running = true;
 }
 
@@ -99,12 +114,16 @@ function updateCactuses() {
       );
     }
     obstanceNode.setAttribute("style", `left: ${smallCactus.position}px`);
-    smallCactus.position -= Obstance.speed;
+    if (Obstance.speed < Obstance.maxspeed) {
+      smallCactus.position -= Obstance.speed;
+    } else {
+      smallCactus.position -= Obstance.maxspeed;
+    }
   }
 }
 
-function incrementSpeed(acc) {
-  Obstance.speed += acc;
+function incrementSpeed() {
+  Obstance.speed += 0.01;
 }
 
 window.addEventListener("keydown", (event) => {
@@ -123,12 +142,15 @@ let isCollide = setInterval(function () {
   // * End game
   if (obstanceLeft < 140 && obstanceLeft > 85 && dinoTop >= 110) {
     setTimeout(restart, 2500);
+    dino.end();
     running = false;
   }
 }, 10);
 
 let obstanceMove = setInterval(updateCactuses, 1);
 
-let ostancePositionIncrement = setInterval(incrementSpeed(0.01), 500);
+let ostancePositionIncrement = setInterval(incrementSpeed, 500);
 
 let scoreStart = setInterval(Score.updateScore, 100);
+
+restart();
