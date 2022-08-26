@@ -1,6 +1,15 @@
 body {
   margin: 0;
   background: #fafafa;
+  overflow: hidden;
+}
+
+.wrap {
+  width: 1000px;
+  height: 1000px;
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
 }
 
 .scene {
@@ -8,17 +17,12 @@ body {
   margin-top: 100px;
   width: 700px;
   height: 300px;
-  border: 2px solid #7b7b7b;
-  overflow: hidden;
-}
-
-.scene hr {
-  margin-top: 110px;
+  border-bottom: 2px solid #7b7b7b;
 }
 
 .dino {
   position: relative;
-  top: 150px;
+  top: 230px;/*230*/
   left: 100px;
   width: 50px;
   height: 50px;
@@ -29,40 +33,50 @@ body {
   animation: dinoRun 0.2s infinite ease;
 }
 
-.obstance {
+.obstance1 {
   position: relative;
   left: 680px;
-  top: 110px;
+  top: 190px;
   background-image: url(images/cactusS1.png);
   width: 20px;
   height: 40px;
   background-size: 20px 40px;
 }
 
+.obstance2 {
+  position: relative;
+  left: 680px;
+  top: 135px;
+  background-image: url(images/cactusB1.png);
+  width: 30px;
+  height: 55px;
+  background-size: 30px 55px;
+}
+
 .dino-jump {
-  animation: jump 500ms linear;
+  animation: jump 600ms linear;
   background-image: url(images/dino.png);
 }
 
 @keyframes jump {
   0% {
-    top: 150px;
+    top: 230px;
   }
 
   33% {
-    top: 75px;
+    top: 150px;
   }
 
   50% {
-    top: 50px;
+    top: 110px;
   }
 
   33% {
-    top: 75px;
+    top: 150px;
   }
 
   100% {
-    top: 150px;
+    top: 230px;
   }
 }
 
