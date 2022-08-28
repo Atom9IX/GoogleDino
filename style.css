@@ -62,6 +62,18 @@ body {
   background-size: 30px 55px;
 }
 
+.ptero {
+  margin-top: -50px;
+  position: relative;
+  left: 680px;
+  top: 135px;
+  background-image: url(images/ptero1.png);
+  width: 50px;
+  height: 35px;
+  background-size: 50px 35px;
+  animation: pteroFly 0.6s infinite step-end;
+}
+
 .dino-jump {
   animation: jump 600ms linear;
   background-image: url(images/dino.png);
@@ -114,6 +126,20 @@ body {
 
   100% {
     background-image: url(images/dinoDown1.png);
+  }
+}
+
+@keyframes pteroFly {
+  0% {
+    background-image: url(images/ptero1.png);
+  }
+
+  50% {
+    background-image: url(images/ptero2.png);
+  }
+
+  100% {
+    background-image: url(images/ptero1.png);
   }
 }
 

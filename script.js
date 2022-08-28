@@ -12,7 +12,7 @@ const userScoreNode = document.querySelector(".user-score");
 const totalScoreNode = document.querySelector(".total-score");
 
 let running = true;
-let randomBigCactusSpawn = 0;
+let randomObstance2Spawn = 0;
 
 // * Key codes
 const space = 32;
@@ -111,12 +111,12 @@ let dino = new Dino({
   isDown: false,
 });
 
-let smallCactus = new Obstance({
+let obstance1 = new Obstance({
   img: "small cactus img...",
   position: 700,
 });
 
-let bigCactus = new Obstance({
+let obstance2 = new Obstance({
   img: "big cactus img...",
   position: -1000,
 });
@@ -125,6 +125,7 @@ let bigCactus = new Obstance({
 function endGame() {
   setTimeout(restart, 2500);
   dino.kill();
+  obstanceNode2.set
   running = false;
 }
 
@@ -132,8 +133,8 @@ function restart() {
   running = true;
   dino.isDown = false;
   Obstance.setObstanceSpeed(1);
-  smallCactus.setPosition(700);
-  bigCactus.setPosition(-1000);
+  obstance1.setPosition(700);
+  obstance2.setPosition(-1000);
   Score.setUserScore(0);
   dino.run();
 }
@@ -144,38 +145,48 @@ function getRandomArbitrary(min, max) {
 
 function updateCactuses() {
   if (running) {
-    // * small cactus
-    if (smallCactus.position < -20) {
-      smallCactus.setPosition(
+    // * obstance 1
+    if (obstance1.position < -20) {
+      obstance1.setPosition(
         getRandomArbitrary(700, 1500 + Obstance.speed * 100)
       );
     }
-    // * cactus movement
-    obstanceNode1.setAttribute("style", `left: ${smallCactus.position}px`);
-    obstanceNode2.setAttribute("style", `left: ${bigCactus.position}px`);
+    // * movement
+    obstanceNode1.setAttribute("style", `left: ${obstance1.position}px`);
+    obstanceNode2.setAttribute("style", `left: ${obstance2.position}px`);
     if (Obstance.speed < Obstance.maxspeed) {
-      smallCactus.position -= Obstance.speed;
-      bigCactus.position -= Obstance.speed;
+      obstance1.position -= Obstance.speed;
+      obstance2.position -= Obstance.speed;
     } else {
-      smallCactus.position -= Obstance.maxspeed;
-      bigCactus.position -= Obstance.maxspeed;
+      obstance1.position -= Obstance.maxspeed;
+      obstance2.position -= Obstance.maxspeed;
     }
-    // * big cactus
-    if (bigCactus.position < 0 && Score.userScore > 400) {
-      randomBigCactusSpawn = getRandomArbitrary(0, 50);
-      if (randomBigCactusSpawn === 1) {
-        bigCactus.setPosition(
+    // * obstance 2
+    if (obstance2.position < 0 && Score.userScore > 400) {
+      randomObstance2Spawn = getRandomArbitrary(0, 50);
+      if (randomObstance2Spawn === 1) {
+        obstanceNode2.classList.add("obstance2");
+        obstanceNode2.classList.remove("ptero");
+        obstance2.setPosition(
           getRandomArbitrary(700, 1500 + Obstance.speed * 100)
         );
-      } else {
-        return;
+      } else if (randomObstance2Spawn === 2) {
+        obstanceNode2.classList.add("ptero");
+        obstanceNode2.classList.remove("obstance2");
+        obstance2.setPosition(
+          getRandomArbitrary(700, 1500 + Obstance.speed * 100)
+        );
       }
     }
     if (
-      smallCactus.position - bigCactus.position < 300 &&
-      smallCactus.position - bigCactus.position > -300
+      obstance1.position - obstance2.position < 300 &&
+      obstance1.position - obstance2.position > -300
     ) {
-      bigCactus.position = smallCactus.position + 350;
+      if (getRandomArbitrary(0, 2) === 1) {
+        obstance2.position = obstance1.position + 350;
+      } else {
+        obstance1.position = obstance2.position + 350;
+      }
     }
   }
 }
@@ -201,12 +212,13 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
-//document.addEventListener(e =>)
-
 // * Collide
 let isCollide = setInterval(function () {
   let dinoHeight = parseInt(
     window.getComputedStyle(dinoNode).getPropertyValue("height")
+  );
+  let obstance2Height = parseInt(
+    window.getComputedStyle(obstanceNode2).getPropertyValue("height")
   );
   let dinoTop = parseInt(
     window.getComputedStyle(dinoNode).getPropertyValue("top")
@@ -217,17 +229,60 @@ let isCollide = setInterval(function () {
   let obstance2Left = parseInt(
     window.getComputedStyle(obstanceNode2).getPropertyValue("left")
   );
-  if (obstanceLeft < 140 && obstanceLeft > 85 && dinoTop >= 190 && dinoHeight === 50) {
+  if (
+    obstanceLeft < 140 &&
+    obstanceLeft > 85 &&
+    dinoTop >= 190 &&
+    dinoHeight === 50 &&
+    obstance2Height !== 35
+  ) {
     endGame();
   }
-  if (obstance2Left < 150 && obstance2Left > 85 && dinoTop >= 175 && dinoHeight === 50) {
+  if (
+    obstance2Left < 150 &&
+    obstance2Left > 85 &&
+    dinoTop >= 175 &&
+    dinoHeight === 50 &&
+    obstance2Height !== 35
+  ) {
     endGame();
   }
   // * down anim
-  if (obstanceLeft < 170 && obstanceLeft > 85 && dinoTop >= 190 && dinoHeight === 30) {
+  if (
+    obstanceLeft < 170 &&
+    obstanceLeft > 85 &&
+    dinoTop >= 190 &&
+    dinoHeight === 30 &&
+    obstance2Height !== 35
+  ) {
     endGame();
   }
-  if (obstance2Left < 170 && obstance2Left > 85 && dinoTop >= 175 && dinoHeight === 30) {
+  if (
+    obstance2Left < 170 &&
+    obstance2Left > 85 &&
+    dinoTop >= 175 &&
+    dinoHeight === 30 &&
+    obstance2Height !== 35
+  ) {
+    endGame();
+  }
+  // * ptero collide
+  if (
+    obstance2Left < 170 &&
+    obstance2Left > 85 &&
+    dinoTop <= 175 &&
+    dinoHeight === 30 &&
+    obstance2Height === 35
+  ) {
+    endGame();
+  }
+  if (
+    obstance2Left < 170 &&
+    obstance2Left > 85 &&
+    dinoTop <= 175 &&
+    dinoHeight === 50 &&
+    obstance2Height === 35
+  ) {
     endGame();
   }
 }, 10);
