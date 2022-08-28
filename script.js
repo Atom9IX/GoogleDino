@@ -3,8 +3,6 @@
  * ! in the end replace repited elements on functions
  */
 
-
-
 // * Node Elements
 const sceneNode = document.querySelector(".scene");
 const dinoNode = document.querySelector(".dino");
@@ -16,7 +14,10 @@ const totalScoreNode = document.querySelector(".total-score");
 let running = true;
 let randomBigCactusSpawn = 0;
 
-// * images
+// * Key codes
+const space = 32;
+const keyUp = 38;
+const keyDown = 40;
 
 // * classes
 class Obstance {
@@ -38,26 +39,50 @@ class Obstance {
 }
 
 class Dino {
+  constructor(options) {
+    this.isDown = options.isDown;
+  }
+
   jump() {
     if (running) {
       if (!dinoNode.classList.contains("dino-jump")) {
         dinoNode.classList.add("dino-jump");
         dinoNode.classList.remove("kill");
+        dinoNode.classList.remove("down");
       }
       setTimeout(function () {
         dinoNode.classList.remove("dino-jump");
       }, 600);
+      dinoNode.classList.add("run");
+    }
+  }
+
+  down() {
+    if (running) {
+      if (this.isDown) {
+        dinoNode.classList.remove("run");
+        dinoNode.classList.add("down");
+        dinoNode.classList.remove("dino-jump");
+        dinoNode.classList.remove("kill");
+      } else {
+        dinoNode.classList.remove("down");
+        dinoNode.classList.add("run");
+      }
     }
   }
 
   kill() {
+    dinoNode.classList.remove("down");
     dinoNode.classList.remove("dino-jump");
     dinoNode.classList.remove("run");
     dinoNode.classList.add("kill");
   }
 
   run() {
-    dinoNode.classList.remove("death");
+    if (this.isDown) {
+      return;
+    }
+    dinoNode.classList.remove("kill");
     dinoNode.classList.add("run");
   }
 }
@@ -82,7 +107,9 @@ class Score {
   }
 }
 
-let dino = new Dino();
+let dino = new Dino({
+  isDown: false,
+});
 
 let smallCactus = new Obstance({
   img: "small cactus img...",
@@ -95,8 +122,15 @@ let bigCactus = new Obstance({
 });
 
 // * Functions
+function endGame() {
+  setTimeout(restart, 2500);
+  dino.kill();
+  running = false;
+}
+
 function restart() {
   running = true;
+  dino.isDown = false;
   Obstance.setObstanceSpeed(1);
   smallCactus.setPosition(700);
   bigCactus.setPosition(-1000);
@@ -109,7 +143,6 @@ function getRandomArbitrary(min, max) {
 }
 
 function updateCactuses() {
-  console.log(bigCactus.position);
   if (running) {
     // * small cactus
     if (smallCactus.position < -20) {
@@ -128,16 +161,15 @@ function updateCactuses() {
       bigCactus.position -= Obstance.maxspeed;
     }
     // * big cactus
-    if (bigCactus.position < -30 && Score.userScore > 400) {
-      randomBigCactusSpawn = getRandomArbitrary(1, 5);
-      if (randomBigCactusSpawn === 2) {
+    if (bigCactus.position < 0 && Score.userScore > 400) {
+      randomBigCactusSpawn = getRandomArbitrary(0, 50);
+      if (randomBigCactusSpawn === 1) {
         bigCactus.setPosition(
           getRandomArbitrary(700, 1500 + Obstance.speed * 100)
         );
       } else {
         return;
       }
-      
     }
     if (
       smallCactus.position - bigCactus.position < 300 &&
@@ -152,12 +184,30 @@ function incrementSpeed() {
   Obstance.speed += 0.01;
 }
 
+// * Key events
 window.addEventListener("keydown", (event) => {
-  dino.jump();
+  if (event.keyCode === space || event.keyCode === keyUp) {
+    dino.jump();
+  } else if (event.keyCode === keyDown) {
+    dino.isDown = true;
+    dino.down();
+  }
 });
+
+window.addEventListener("keyup", (event) => {
+  if (event.keyCode === keyDown) {
+    dino.isDown = false;
+    dino.down();
+  }
+});
+
+//document.addEventListener(e =>)
 
 // * Collide
 let isCollide = setInterval(function () {
+  let dinoHeight = parseInt(
+    window.getComputedStyle(dinoNode).getPropertyValue("height")
+  );
   let dinoTop = parseInt(
     window.getComputedStyle(dinoNode).getPropertyValue("top")
   );
@@ -167,23 +217,24 @@ let isCollide = setInterval(function () {
   let obstance2Left = parseInt(
     window.getComputedStyle(obstanceNode2).getPropertyValue("left")
   );
-
-  // * End game
-  if (obstanceLeft < 140 && obstanceLeft > 85 && dinoTop >= 190) {
-    setTimeout(restart, 2500);
-    dino.kill();
-    running = false;
+  if (obstanceLeft < 140 && obstanceLeft > 85 && dinoTop >= 190 && dinoHeight === 50) {
+    endGame();
   }
-  if (obstance2Left < 150 && obstance2Left > 85 && dinoTop >= 175) {
-    setTimeout(restart, 2500);
-    dino.kill();
-    running = false;
+  if (obstance2Left < 150 && obstance2Left > 85 && dinoTop >= 175 && dinoHeight === 50) {
+    endGame();
+  }
+  // * down anim
+  if (obstanceLeft < 170 && obstanceLeft > 85 && dinoTop >= 190 && dinoHeight === 30) {
+    endGame();
+  }
+  if (obstance2Left < 170 && obstance2Left > 85 && dinoTop >= 175 && dinoHeight === 30) {
+    endGame();
   }
 }, 10);
 
 let obstanceMove = setInterval(updateCactuses, 1);
 
-let ostancePositionIncrement = setInterval(incrementSpeed, 500);
+let ostanceSpeedIncrement = setInterval(incrementSpeed, 500);
 
 let scoreStart = setInterval(Score.updateScore, 100);
 
