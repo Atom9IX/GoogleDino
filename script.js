@@ -1,5 +1,5 @@
 /**
- * todo: add 3 images big cactuses, 3 images small cactuses, pterodactel, day/night, cloud, sun/moon, road animation, addEventListener in the end "spacerestart"
+ * todo: add 3 images big cactuses, 3 images small cactuses, day/night, cloud, sun/moon, road animation, addEventListener in the end "spacerestart"
  * ! in the end replace repited elements on functions
  */
 
@@ -10,19 +10,22 @@ const obstanceNode1 = document.querySelector(".obstance1");
 const obstanceNode2 = document.querySelector(".obstance2");
 const userScoreNode = document.querySelector(".user-score");
 const totalScoreNode = document.querySelector(".total-score");
+const pteroNode = document.querySelector(".ptero");
 
 let running = true;
-let randomObstance2Spawn = 0;
 
-// * Key codes
-const space = 32;
-const keyUp = 38;
-const keyDown = 40;
+// * keybord
+const keys = {
+  space: 32,
+  keyUp: 38,
+  keyDown: 40,
+};
 
 // * classes
 class Obstance {
   static speed = 1;
   static maxspeed = 3.5;
+  static randomSpawnNumber = 0;
 
   constructor(options) {
     this.img = options.img;
@@ -46,44 +49,44 @@ class Dino {
   jump() {
     if (running) {
       if (!dinoNode.classList.contains("dino-jump")) {
-        dinoNode.classList.add("dino-jump");
-        dinoNode.classList.remove("kill");
-        dinoNode.classList.remove("down");
+        updateNodeClass(dinoNode, "add", "dino-jump");
+        updateNodeClass(dinoNode, "remove", "kill");
+        updateNodeClass(dinoNode, "remove", "down");
       }
       setTimeout(function () {
-        dinoNode.classList.remove("dino-jump");
+        updateNodeClass(dinoNode, "remove", "dino-jump");
       }, 600);
-      dinoNode.classList.add("run");
+      updateNodeClass(dinoNode, "add", "run");
     }
   }
 
   down() {
     if (running) {
       if (this.isDown) {
-        dinoNode.classList.remove("run");
-        dinoNode.classList.add("down");
-        dinoNode.classList.remove("dino-jump");
-        dinoNode.classList.remove("kill");
+        updateNodeClass(dinoNode, "remove", "run");
+        updateNodeClass(dinoNode, "add", "down");
+        updateNodeClass(dinoNode, "remove", "dino-jump");
+        updateNodeClass(dinoNode, "remove", "kill");
       } else {
-        dinoNode.classList.remove("down");
-        dinoNode.classList.add("run");
+        updateNodeClass(dinoNode, "remove", "down");
+        updateNodeClass(dinoNode, "add", "run");
       }
     }
   }
 
   kill() {
-    dinoNode.classList.remove("down");
-    dinoNode.classList.remove("dino-jump");
-    dinoNode.classList.remove("run");
-    dinoNode.classList.add("kill");
+    updateNodeClass(dinoNode, "remove", "down");
+    updateNodeClass(dinoNode, "remove", "dino-jump");
+    updateNodeClass(dinoNode, "remove", "run");
+    updateNodeClass(dinoNode, "add", "kill");
   }
 
   run() {
     if (this.isDown) {
       return;
     }
-    dinoNode.classList.remove("kill");
-    dinoNode.classList.add("run");
+    updateNodeClass(dinoNode, "remove", "kill");
+    updateNodeClass(dinoNode, "add", "run");
   }
 }
 
@@ -123,9 +126,10 @@ let obstance2 = new Obstance({
 
 // * Functions
 function endGame() {
+  obstanceNode2.style.animation = "none";
   setTimeout(restart, 2500);
   dino.kill();
-  obstanceNode2.set
+  obstanceNode2.set;
   running = false;
 }
 
@@ -143,6 +147,18 @@ function getRandomArbitrary(min, max) {
   return Math.ceil(Math.random() * (max - min) + min);
 }
 
+function moveObstances() {
+  obstanceNode1.setAttribute("style", `left: ${obstance1.position}px`);
+  obstanceNode2.setAttribute("style", `left: ${obstance2.position}px`);
+  if (Obstance.speed < Obstance.maxspeed) {
+    obstance1.position -= Obstance.speed;
+    obstance2.position -= Obstance.speed;
+  } else {
+    obstance1.position -= Obstance.maxspeed;
+    obstance2.position -= Obstance.maxspeed;
+  }
+}
+
 function updateCactuses() {
   if (running) {
     // * obstance 1
@@ -152,35 +168,27 @@ function updateCactuses() {
       );
     }
     // * movement
-    obstanceNode1.setAttribute("style", `left: ${obstance1.position}px`);
-    obstanceNode2.setAttribute("style", `left: ${obstance2.position}px`);
-    if (Obstance.speed < Obstance.maxspeed) {
-      obstance1.position -= Obstance.speed;
-      obstance2.position -= Obstance.speed;
-    } else {
-      obstance1.position -= Obstance.maxspeed;
-      obstance2.position -= Obstance.maxspeed;
-    }
+    moveObstances();
     // * obstance 2
-    if (obstance2.position < 0 && Score.userScore > 400) {
-      randomObstance2Spawn = getRandomArbitrary(0, 50);
-      if (randomObstance2Spawn === 1) {
-        obstanceNode2.classList.add("obstance2");
-        obstanceNode2.classList.remove("ptero");
+    if (obstance2.position < 0) {
+      Obstance.randomSpawnNumber = getRandomArbitrary(0, 50);
+      if (Obstance.randomSpawnNumber === 1 /*&& Score.userScore > 200*/) {
+        updateNodeClass(obstanceNode2, "add", "obstance2");
+        updateNodeClass(obstanceNode2, "remove", "ptero");
         obstance2.setPosition(
           getRandomArbitrary(700, 1500 + Obstance.speed * 100)
         );
-      } else if (randomObstance2Spawn === 2) {
-        obstanceNode2.classList.add("ptero");
-        obstanceNode2.classList.remove("obstance2");
+      } else if (Obstance.randomSpawnNumber === 2 /*&& Score.userScore > 400*/) {
+        updateNodeClass(obstanceNode2, "add", "ptero");
+        updateNodeClass(obstanceNode2, "remove", "obstance2");
         obstance2.setPosition(
           getRandomArbitrary(700, 1500 + Obstance.speed * 100)
         );
       }
     }
     if (
-      obstance1.position - obstance2.position < 300 &&
-      obstance1.position - obstance2.position > -300
+      obstance1.position - obstance2.position < 350 &&
+      obstance1.position - obstance2.position > -350
     ) {
       if (getRandomArbitrary(0, 2) === 1) {
         obstance2.position = obstance1.position + 350;
@@ -195,18 +203,26 @@ function incrementSpeed() {
   Obstance.speed += 0.01;
 }
 
+function updateNodeClass(node, updateType, name) {
+  if (updateType === "add") {
+    node.classList.add(name);
+  } else if (updateType === "remove") {
+    node.classList.remove(name);
+  }
+}
+
 // * Key events
 window.addEventListener("keydown", (event) => {
-  if (event.keyCode === space || event.keyCode === keyUp) {
+  if (event.keyCode === keys.space || event.keyCode === keys.keyUp) {
     dino.jump();
-  } else if (event.keyCode === keyDown) {
+  } else if (event.keyCode === keys.keyDown) {
     dino.isDown = true;
     dino.down();
   }
 });
 
 window.addEventListener("keyup", (event) => {
-  if (event.keyCode === keyDown) {
+  if (event.keyCode === keys.keyDown) {
     dino.isDown = false;
     dino.down();
   }
@@ -278,7 +294,7 @@ let isCollide = setInterval(function () {
   }
   if (
     obstance2Left < 170 &&
-    obstance2Left > 85 &&
+    obstance2Left > 55 &&
     dinoTop <= 175 &&
     dinoHeight === 50 &&
     obstance2Height === 35
