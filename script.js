@@ -129,7 +129,7 @@ function endGame() {
   obstanceNode2.style.animation = "none";
   setTimeout(restart, 2500);
   dino.kill();
-  obstanceNode2.set;
+  //obstanceNode2.set;
   running = false;
 }
 
@@ -175,12 +175,14 @@ function updateCactuses() {
       if (Obstance.randomSpawnNumber === 1 /*&& Score.userScore > 200*/) {
         updateNodeClass(obstanceNode2, "add", "obstance2");
         updateNodeClass(obstanceNode2, "remove", "ptero");
+        updateNodeClass(obstanceNode2, "remove", "s1obstance");
         obstance2.setPosition(
           getRandomArbitrary(700, 1500 + Obstance.speed * 100)
         );
       } else if (Obstance.randomSpawnNumber === 2 /*&& Score.userScore > 400*/) {
         updateNodeClass(obstanceNode2, "add", "ptero");
         updateNodeClass(obstanceNode2, "remove", "obstance2");
+        updateNodeClass(obstanceNode2, "remove", "s1obstance");
         obstance2.setPosition(
           getRandomArbitrary(700, 1500 + Obstance.speed * 100)
         );
@@ -190,11 +192,7 @@ function updateCactuses() {
       obstance1.position - obstance2.position < 350 &&
       obstance1.position - obstance2.position > -350
     ) {
-      if (getRandomArbitrary(0, 2) === 1) {
-        obstance2.position = obstance1.position + 350;
-      } else {
-        obstance1.position = obstance2.position + 350;
-      }
+      obstance1.position = obstance2.position + 350;
     }
   }
 }
@@ -239,18 +237,17 @@ let isCollide = setInterval(function () {
   let dinoTop = parseInt(
     window.getComputedStyle(dinoNode).getPropertyValue("top")
   );
-  let obstanceLeft = parseInt(
+  let obstance1Left = parseInt(
     window.getComputedStyle(obstanceNode1).getPropertyValue("left")
   );
   let obstance2Left = parseInt(
     window.getComputedStyle(obstanceNode2).getPropertyValue("left")
   );
   if (
-    obstanceLeft < 140 &&
-    obstanceLeft > 85 &&
+    obstance1Left < 140 &&
+    obstance1Left > 85 &&
     dinoTop >= 190 &&
-    dinoHeight === 50 &&
-    obstance2Height !== 35
+    dinoHeight === 50
   ) {
     endGame();
   }
@@ -265,8 +262,8 @@ let isCollide = setInterval(function () {
   }
   // * down anim
   if (
-    obstanceLeft < 170 &&
-    obstanceLeft > 85 &&
+    obstance1Left < 170 &&
+    obstance1Left > 85 &&
     dinoTop >= 190 &&
     dinoHeight === 30 &&
     obstance2Height !== 35

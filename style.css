@@ -1,3 +1,7 @@
+/* html {
+  filter: invert();
+} */
+
 body {
   margin: 0;
   background: #fafafa;
@@ -22,11 +26,21 @@ body {
 
 .dino {
   position: relative;
-  top: 230px;
+  top: 230px;/*230*/
   left: 100px;
   width: 50px;
   height: 50px;
   background-size: 50px 50px;
+}
+
+.cloud {
+  position: absolute;
+  top: 200px;
+  width: 70px;
+  height: 50px;
+  background-image: url(images/cloud.jpg);
+  background-size: 70 50;
+  animation: cloudMove 10s infinite linear;
 }
 
 .down {
@@ -77,6 +91,16 @@ body {
 .dino-jump {
   animation: jump 600ms linear;
   background-image: url(images/dino.png);
+}
+
+.s1obstance {
+  position: relative;
+  left: 680px;
+  top: 150px;
+  background-image: url(images/cactusS1.png);
+  width: 20px;
+  height: 40px;
+  background-size: 20px 40px;
 }
 
 @keyframes jump {
@@ -140,6 +164,21 @@ body {
 
   100% {
     background-image: url(images/ptero1.png);
+  }
+}
+
+@keyframes cloudMove {
+  0% {
+    left: 1000px;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 300px;
+    opacity: 0;
   }
 }
 
