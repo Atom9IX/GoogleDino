@@ -1,8 +1,3 @@
-/**
- * todo: add 3 images big cactuses, 3 images small cactuses, day/night, cloud, sun/moon, road animation, addEventListener in the end "spacerestart"
- * ! in the end replace repited elements on functions
- */
-
 // * Node Elements
 const sceneNode = document.querySelector(".scene");
 const dinoNode = document.querySelector(".dino");
@@ -110,6 +105,7 @@ class Score {
   }
 }
 
+// * Class objects
 let dino = new Dino({
   isDown: false,
 });
@@ -125,26 +121,54 @@ let obstance2 = new Obstance({
 });
 
 // * Functions
+function updateNodeClass(node, updateType, name) {
+  if (updateType === "add") {
+    node.classList.add(name);
+  } else if (updateType === "remove") {
+    node.classList.remove(name);
+  }
+}
+
+function getRandomArbitrary(min, max) {
+  return Math.ceil(Math.random() * (max - min) + min);
+}
+
+function incrementSpeed() {
+  Obstance.speed += 0.01;
+}
+
 function endGame() {
   obstanceNode2.style.animation = "none";
   setTimeout(restart, 2500);
   dino.kill();
-  //obstanceNode2.set;
   running = false;
 }
 
 function restart() {
   running = true;
+  dino.run();
   dino.isDown = false;
   Obstance.setObstanceSpeed(1);
   obstance1.setPosition(700);
   obstance2.setPosition(-1000);
   Score.setUserScore(0);
-  dino.run();
 }
 
-function getRandomArbitrary(min, max) {
-  return Math.ceil(Math.random() * (max - min) + min);
+function checkObstance1Position() {
+  if (obstance1.position < -20) {
+    obstance1.setPosition(
+      getRandomArbitrary(700, 1500 + Obstance.speed * 100)
+    );
+  }
+}
+
+function checkObstancesPosition() {
+  if (
+    obstance1.position - obstance2.position < 350 &&
+    obstance1.position - obstance2.position > -350
+  ) {
+    obstance1.position = obstance2.position + 350;
+  }
 }
 
 function moveObstances() {
@@ -159,53 +183,33 @@ function moveObstances() {
   }
 }
 
-function updateCactuses() {
-  if (running) {
-    // * obstance 1
-    if (obstance1.position < -20) {
-      obstance1.setPosition(
+function setRandomObstance2() {
+  if (obstance2.position < -20) {
+    Obstance.randomSpawnNumber = getRandomArbitrary(0, 2);
+    if (Obstance.randomSpawnNumber === 1 && Score.userScore > 200) {
+      updateNodeClass(obstanceNode2, "add", "obstance2");
+      updateNodeClass(obstanceNode2, "remove", "ptero");
+      updateNodeClass(obstanceNode2, "remove", "s1obstance");
+      obstance2.setPosition(
         getRandomArbitrary(700, 1500 + Obstance.speed * 100)
       );
-    }
-    // * movement
-    moveObstances();
-    // * obstance 2
-    if (obstance2.position < 0) {
-      Obstance.randomSpawnNumber = getRandomArbitrary(0, 50);
-      if (Obstance.randomSpawnNumber === 1 /*&& Score.userScore > 200*/) {
-        updateNodeClass(obstanceNode2, "add", "obstance2");
-        updateNodeClass(obstanceNode2, "remove", "ptero");
-        updateNodeClass(obstanceNode2, "remove", "s1obstance");
-        obstance2.setPosition(
-          getRandomArbitrary(700, 1500 + Obstance.speed * 100)
-        );
-      } else if (Obstance.randomSpawnNumber === 2 /*&& Score.userScore > 400*/) {
-        updateNodeClass(obstanceNode2, "add", "ptero");
-        updateNodeClass(obstanceNode2, "remove", "obstance2");
-        updateNodeClass(obstanceNode2, "remove", "s1obstance");
-        obstance2.setPosition(
-          getRandomArbitrary(700, 1500 + Obstance.speed * 100)
-        );
-      }
-    }
-    if (
-      obstance1.position - obstance2.position < 350 &&
-      obstance1.position - obstance2.position > -350
-    ) {
-      obstance1.position = obstance2.position + 350;
+    } else if (Obstance.randomSpawnNumber === 2 && Score.userScore > 400) {
+      updateNodeClass(obstanceNode2, "add", "ptero");
+      updateNodeClass(obstanceNode2, "remove", "obstance2");
+      updateNodeClass(obstanceNode2, "remove", "s1obstance");
+      obstance2.setPosition(
+        getRandomArbitrary(700, 1500 + Obstance.speed * 100)
+      );
     }
   }
 }
 
-function incrementSpeed() {
-  Obstance.speed += 0.01;
-}
-
-function updateNodeClass(node, updateType, name) {
-  if (updateType === "add") {
-    node.classList.add(name);
-  } else if (updateType === "remove") {
-    node.classList.remove(name);
+function updateCactuses() {
+  if (running) {
+    moveObstances();
+    checkObstance1Position();
+    setRandomObstance2();
+    checkObstancesPosition();
   }
 }
 
@@ -300,7 +304,7 @@ let isCollide = setInterval(function () {
   }
 }, 10);
 
-let obstanceMove = setInterval(updateCactuses, 1);
+let obstanceMove = setInterval(updateCactuses, 5);
 
 let ostanceSpeedIncrement = setInterval(incrementSpeed, 500);
 
