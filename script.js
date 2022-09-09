@@ -223,6 +223,10 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+window.addEventListener("keydown", (event) => {
+    dino.jump();
+});
+
 window.addEventListener("keyup", (event) => {
   if (event.keyCode === keys.keyDown) {
     dino.isDown = false;
