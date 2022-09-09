@@ -1,6 +1,15 @@
 body {
   margin: 0;
   background: #fafafa;
+  overflow: hidden;
+}
+
+.wrap {
+  width: 1000px;
+  height: 1000px;
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
 }
 
 .scene {
@@ -8,61 +17,107 @@ body {
   margin-top: 100px;
   width: 700px;
   height: 300px;
-  border: 2px solid #7b7b7b;
-  overflow: hidden;
-}
-
-.scene hr {
-  margin-top: 110px;
+  border-bottom: 2px solid #7b7b7b;
 }
 
 .dino {
   position: relative;
-  top: 150px;
+  top: 230px; 
   left: 100px;
   width: 50px;
   height: 50px;
   background-size: 50px 50px;
 }
 
+.cloud {
+  position: absolute;
+  top: 200px;
+  width: 70px;
+  height: 50px;
+  background-image: url(images/cloud.jpg);
+  background-size: 70 50;
+  animation: cloudMove 10s infinite linear;
+}
+
+.down {
+  margin-top: 20px;
+  height: 30px;
+  width: 80px;
+  background-size: 80px 30px;
+  background-image: url(images/dinoDown1.png);
+  animation: downRun 0.2s infinite ease;
+}
+
 .run {
   animation: dinoRun 0.2s infinite ease;
 }
 
-.obstance {
+.obstance1 {
   position: relative;
   left: 680px;
-  top: 110px;
+  top: 190px;
   background-image: url(images/cactusS1.png);
   width: 20px;
   height: 40px;
   background-size: 20px 40px;
 }
 
+.obstance2 {
+  position: relative;
+  left: 680px;
+  top: 135px;
+  background-image: url(images/cactusB1.png);
+  width: 30px;
+  height: 55px;
+  background-size: 30px 55px;
+}
+
+.ptero {
+  margin-top: -50px;
+  position: relative;
+  left: 680px;
+  top: 135px;
+  background-image: url(images/ptero1.png);
+  width: 50px;
+  height: 35px;
+  background-size: 50px 35px;
+  animation: pteroFly 0.6s infinite step-end;
+}
+
 .dino-jump {
-  animation: jump 500ms linear;
+  animation: jump 600ms linear;
   background-image: url(images/dino.png);
+}
+
+.s1obstance {
+  position: relative;
+  left: 680px;
+  top: 150px;
+  background-image: url(images/cactusS1.png);
+  width: 20px;
+  height: 40px;
+  background-size: 20px 40px;
 }
 
 @keyframes jump {
   0% {
-    top: 150px;
+    top: 230px;
   }
 
   33% {
-    top: 75px;
+    top: 150px;
   }
 
   50% {
-    top: 50px;
+    top: 110px;
   }
 
   33% {
-    top: 75px;
+    top: 150px;
   }
 
   100% {
-    top: 150px;
+    top: 230px;
   }
 }
 
@@ -77,6 +132,49 @@ body {
 
   100% {
     background-image: url(images/dinoRun1.png);
+  }
+}
+
+@keyframes downRun {
+  0% {
+    background-image: url(images/dinoDown1.png);
+  }
+
+  50% {
+    background-image: url(images/dinoDown2.png);
+  }
+
+  100% {
+    background-image: url(images/dinoDown1.png);
+  }
+}
+
+@keyframes pteroFly {
+  0% {
+    background-image: url(images/ptero1.png);
+  }
+
+  50% {
+    background-image: url(images/ptero2.png);
+  }
+
+  100% {
+    background-image: url(images/ptero1.png);
+  }
+}
+
+@keyframes cloudMove {
+  0% {
+    left: 1000px;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 300px;
+    opacity: 0;
   }
 }
 
